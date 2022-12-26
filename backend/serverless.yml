@@ -1,6 +1,6 @@
 org: trangnd
 app: udacity-project-4
-service: udacity-project-4
+service: udacity-final-project
 
 plugins:
   - serverless-webpack
@@ -24,10 +24,10 @@ provider:
   # Use these variables in the functions and resouorces section below. For example, 
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: Todos-${self:provider.stage}
-    ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-trangnd-${self:provider.stage}
+    REVIEWS_TABLE: Reviews-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: serverless-final-project-trangnd-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    TODOS_TABLE_USER_ID_INDEX: UserIdIndex
+    REVIEWS_TABLE_USER_ID_INDEX: UserIdIndex
     AUTH_0_JWKS: https://dev-pq1nh4b4jgzvydfn.us.auth0.com/.well-known/jwks.json
 
   logs:
@@ -43,107 +43,85 @@ provider:
             - xray:PutTraceSegments
           Resource: "*"
 
-# custom:
-#   documentation:
-#     models:
-#       - name: TodoRequest
-#         contentType: application/json
-#         schema: ${file(models/create-todo-model.json)}
-#       - name: UpdateTodoRequest
-#         contentType: application/json
-#         schema: ${file(models/update-todo-model.json)}
-
 functions:
 
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  GetTodos:
-    handler: src/lambda/http/getTodos.handler
+  GetReviews:
+    handler: src/lambda/http/getReviews.handler
     events:
       - http:
           method: get
-          path: todos
+          path: reviews
           cors: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_TABLE_USER_ID_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}/index/${self:provider.environment.REVIEWS_TABLE_USER_ID_INDEX}
       - Effect: Allow
         Action:
           - xray:*
         Resource:
           - '*'     
 
-  CreateTodo:
-    handler: src/lambda/http/createTodo.handler
+  CreateReview:
+    handler: src/lambda/http/createReview.handler
     events:
       - http:
           method: post
-          path: todos
+          path: reviews
           cors: true
           authorizer: Auth
           request:
             schemas:
-              application/json: ${file(models/create-todo-model.json)}          
-          # reqValidatorName: RequestBodyValidator
-          # documentation:
-          #   summary: Create a new todo
-          #   description: Create a new todo
-          #   requestModels:
-          #     'application/json': TodoRequest
+              application/json: ${file(models/create-review-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}
       - Effect: Allow
         Action:
           - xray:*
         Resource:
           - '*'        
   
-  UpdateTodo:
-    handler: src/lambda/http/updateTodo.handler
+  UpdateReview:
+    handler: src/lambda/http/updateReview.handler
     events:
       - http:
           method: patch
-          path: todos/{todoId}
+          path: reviews/{reviewId}
           cors: true
           authorizer: Auth	
           request:
             schemas:
-              application/json: ${file(models/update-todo-model.json)}
-          # reqValidatorName: RequestBodyValidator
-          # documentation:
-          #   summary: Update an todo
-          #   description: Update an todo
-          #   requestModels:
-          #     'application/json': UpdateTodoRequest
+              application/json: ${file(models/update-review-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}
       - Effect: Allow
         Action:
           - xray:*
         Resource:
           - '*'        
   
-  DeleteTodo:
-    handler: src/lambda/http/deleteTodo.handler
+  DeleteReview:
+    handler: src/lambda/http/deleteReview.handler
     events:
       - http:
           method: delete
-          path: todos/{todoId}
+          path: reviews/{reviewId}
           cors: true
           authorizer: Auth
     iamRoleStatements:
@@ -151,7 +129,7 @@ functions:
         Action:
           - dynamodb:GetItem
           - dynamodb:DeleteItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}
       - Effect: Allow
         Action:
           - xray:*
@@ -163,7 +141,7 @@ functions:
     events:
       - http:
           method: post
-          path: todos/{todoId}/attachment
+          path: reviews/{reviewId}/attachment
           cors: true
           authorizer: Auth
     iamRoleStatements:
@@ -171,7 +149,7 @@ functions:
         Action:
           - dynamodb:GetItem
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.REVIEWS_TABLE}
       - Effect: Allow
         Action:
           - s3:PutObject
@@ -185,18 +163,6 @@ functions:
 
 resources:
   Resources:
-    # Add necessary AWS resources. You will need at least the following AWS resources
-    # TODO: Fill the properties
-    # Feel free to change the names as you like. 
-    # RequestBodyValidator:
-    #   Type: AWS::ApiGateway::RequestValidator
-    #   Properties:
-    #     Name: 'request-body-validator'
-    #     RestApiId:
-    #       Ref: ApiGatewayRestApi
-    #     ValidateRequestBody: true
-    #     ValidateRequestParameters: false
-
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
       Properties:
@@ -208,28 +174,24 @@ resources:
         RestApiId:
           Ref: ApiGatewayRestApi
     
-    TodosTable:
+    ReviewsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: todoId
+          - AttributeName: reviewId
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: dueDate
-            AttributeType: S
         KeySchema:
-          - AttributeName: todoId
+          - AttributeName: reviewId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.REVIEWS_TABLE}
         GlobalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOS_TABLE_USER_ID_INDEX}
+          - IndexName: ${self:provider.environment.REVIEWS_TABLE_USER_ID_INDEX}
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
-              - AttributeName: dueDate
-                KeyType: RANGE
             Projection:
               ProjectionType: ALL # What attributes will be copied to an index
 

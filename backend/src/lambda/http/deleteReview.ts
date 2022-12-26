@@ -4,18 +4,18 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { deleteTodo } from '../../helpers/todos'
+import { deleteReview } from '../../helpers/reviews'
 // import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
 
-const logger = createLogger('deleteTodo')
+const logger = createLogger('deleteReview')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("Processing deleteTodo event: ", event)
-    const todoId = event.pathParameters.todoId
+    logger.info("Processing deleteReview event: ", event)
+    const reviewId = event.pathParameters.reviewId
     
-    await deleteTodo(todoId)
+    await deleteReview(reviewId)
     
     return {
       statusCode: 200,    

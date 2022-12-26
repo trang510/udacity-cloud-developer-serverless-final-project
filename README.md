@@ -1,5 +1,5 @@
-# Serverless To-do List
-This application will allow creating/removing/updating/fetching To-do items. Each To-do item can optionally have an attachment image. Each user only has access to To-do items that he/she has created.
+# Serverless Book Review
+This application will allow creating/removing/updating/fetching book reviews. Each review item can optionally have an attachment image. Each user only has access to reviews that he/she has created.
 
 ## Prerequisites
 
@@ -14,13 +14,13 @@ This application will allow creating/removing/updating/fetching To-do items. Eac
 The following functions are implemented:
 * `Auth` - implement a custom authorizer for API Gateway that should be added to all other functions.
 
-* `Get Todos` - return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
-* `Create Todo` - create a new TODO for a current user.
-* `Update Todo` - update a TODO item created by a current user
+* `Get Reviews` - return all reviews for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+* `Create Review` - create a new review for a current user.
+* `Update Review` - update a review item created by a current user
 
-* `DeleteTodo` - delete a TODO item created by a current user.
+* `Delete Review` - delete a review item created by a current user.
 
-* `Upload an image` - upload an image for the TODO
+* `Upload an image` - upload an image for the review
 
 ### Deployment
 ```bash
@@ -72,7 +72,7 @@ npm install
 npm run start
 ```
 
-This should start a development server with the React application that will interact with the serverless TODO application.
+This should start a development server with the React application that will interact with the serverless Book Review application.
 
 # Postman collection
 

@@ -1,23 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "todo",
+  "title": "review",
   "type": "object",
   "properties": {
-    "name": {
+    "content": {
       "type": "string",
       "pattern": ".+"
     },
-    "dueDate": {
-      "type": "string"
-    },
-    "done": {
-      "type": "boolean"
-    }
+    "bookName": {
+      "type": "string",
+      "pattern": ".+"
+    }    
   },
   "required": [
-    "name",
-    "dueDate",
-    "done"
+    "content",
+    "bookName"
   ],
   "additionalProperties": false
 }
