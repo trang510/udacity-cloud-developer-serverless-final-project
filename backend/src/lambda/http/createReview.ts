@@ -4,7 +4,7 @@ import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { CreateReviewRequest } from '../../requests/CreateReviewRequest'
 import { getUserId } from '../utils';
-import { createReview } from '../../helpers/reviews'
+import { createReview } from '../../businessLogic/reviews'
 import { createLogger } from '../../utils/logger'
 
 const logger = createLogger('createReview')

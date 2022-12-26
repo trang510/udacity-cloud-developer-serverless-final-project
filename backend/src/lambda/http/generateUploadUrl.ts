@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { generateUploadUrl, updateAttachmentUrl } from '../../helpers/reviews'
+import { generateUploadUrl, updateAttachmentUrl } from '../../businessLogic/reviews'
 // import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
 import * as uuid from 'uuid'

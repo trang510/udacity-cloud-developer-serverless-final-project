@@ -1,4 +1,4 @@
-import { ReviewAccess } from './reviewsAcess'
+import { ReviewAccess } from '../dataLayer/ReviewsAcess'
 // import { AttachmentUtils } from './attachmentUtils';
 import { BookReview } from '../models/BookReview'
 import { CreateReviewRequest } from '../requests/CreateReviewRequest'
@@ -7,7 +7,7 @@ import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
 // import * as createError from 'http-errors'
 import { ReviewUpdate } from '../models/ReviewUpdate'
-import { ReviewsStorage } from './attachmentUtils'
+import { ReviewsStorage } from '../dataLayer/ReviewsStorage'
 
 const logger = createLogger('reviews')
 const reviewAccess = new ReviewAccess()
